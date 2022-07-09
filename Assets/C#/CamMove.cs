@@ -8,10 +8,12 @@ public class CamMove : MonoBehaviour
 
     private float mouseX;
     private float mouseY;
+    private Rigidbody playerRBcam;
 
-    public float maxRotation;
-    public float minRotation;
-
+    private void Awake()
+    {
+        playerRBcam = this.GetComponent<Rigidbody>();
+    }
     void Start()
     {
         
@@ -33,11 +35,19 @@ public class CamMove : MonoBehaviour
         mouseX = Input.GetAxis("Mouse X");
         mouseY = Input.GetAxis("Mouse Y")*-1f;
 
+        #region RB rotation
         //Cam player rotation. This might need to be changing angle of velocity / angular velocity(=new velocity)
-        this.gameObject.transform.Rotate(new Vector3(0, mouseX, 0));
+        //Old rotation
+        //this.gameObject.transform.Rotate(new Vector3(0, mouseX, 0));
+        playerRBcam.angularVelocity = new Vector3(0, mouseX*3, 0);
+        
+
+
+
+    #endregion
 
         //Cam X rotation
-       if (mouseY!=0)
+        if (mouseY!=0)
         {
 
             if ((mouseY>0) && (rotationPoint.transform.rotation.eulerAngles.x<45f|| rotationPoint.transform.rotation.eulerAngles.x>305))
