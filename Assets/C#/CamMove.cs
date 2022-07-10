@@ -4,30 +4,27 @@ using UnityEngine;
 
 public class CamMove : MonoBehaviour
 {
+    [System.NonSerialized]
+    public bool useCCcam;
+    [System.NonSerialized]
+    public Rigidbody playerRBcam;
+
+    private GameObject playerCharacterRefCC;
+
     public GameObject rotationPoint;
 
     private float mouseX;
     private float mouseY;
-    private Rigidbody playerRBcam;
 
-    private void Awake()
+    private void Start()
     {
-        playerRBcam = this.GetComponent<Rigidbody>();
+        playerCharacterRefCC = GameObject.FindGameObjectWithTag("Player").gameObject;
     }
-    void Start()
-    {
-        
-
-
-    }
-
-
 
     void Update()
     {
-        CameraInputRotation();
-
-
+       if (!useCCcam) CameraInputRotation();
+        if (useCCcam) camRotationCC();
     }
 
     private void CameraInputRotation ()
@@ -70,4 +67,37 @@ public class CamMove : MonoBehaviour
             
         
     }
+
+    private void camRotationCC()
+    {
+        //Inputs
+        mouseX = Input.GetAxis("Mouse X");
+        mouseY = Input.GetAxis("Mouse Y") * -1f;
+
+        playerCharacterRefCC.transform.Rotate(new Vector3(0, mouseX, 0));
+
+        #region Up down cam movement
+        if (mouseY != 0)
+        {
+
+            if ((mouseY > 0) && (rotationPoint.transform.rotation.eulerAngles.x < 45f || rotationPoint.transform.rotation.eulerAngles.x > 305))
+            {
+                // Up, positive X
+                rotationPoint.transform.Rotate(new Vector3(mouseY, 0, 0));
+            }
+
+
+            if ((mouseY < 0) && (rotationPoint.transform.rotation.eulerAngles.x < 50f || rotationPoint.transform.rotation.eulerAngles.x > 310))
+            {
+                //Down
+                rotationPoint.transform.Rotate(new Vector3(mouseY, 0, 0));
+            }
+
+        }
+        #endregion
+
+
+    }
+
 }
+
